@@ -51,7 +51,7 @@ public class BookController {
     // @PostMapping("/addbook")
 //GetMapping("/")
     @RequestMapping(value = {"/addbook"}, method = RequestMethod.POST)
-    public ModelAndView savePerson(Model model, //
+    public ModelAndView saveBook(Model model, //
                                    @ModelAttribute("bookform") BookForm bookForm) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("booklist");
@@ -79,19 +79,55 @@ public class BookController {
     // @PostMapping("/addbook")
 //GetMapping("/")
     @RequestMapping(value = {"/deletebook"}, method = RequestMethod.POST)
-    public ModelAndView saveBook(Model model, //
+    public ModelAndView saveBook1(Model model, //
                                    @ModelAttribute("bookform") BookForm bookForm) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("booklist");
         String title = bookForm.getTitle();
         if (title != null && title.length() > 0) {
-            Book newBook = books.equals();
-            books.add(newBook);
-            model.addAttribute("books",books);
-            return modelAndView;
+            for(Book book:books){
+                if(title.equals(book.getTitle())){
+                    books.remove(book);
+                    break;
+                }
+            }
         }
         model.addAttribute("errorMessage", errorMessage);
-        modelAndView.setViewName("addbook");
+        model.addAttribute("books", books);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = {"/editbook"}, method = RequestMethod.GET)
+    public ModelAndView showEditBookPage(Model model) {
+        ModelAndView modelAndView = new ModelAndView("editbook");
+        BookForm bookForm = new BookForm();
+        model.addAttribute("bookform", bookForm);
+        return modelAndView;
+    }
+    // @PostMapping("/addbook")
+//GetMapping("/")
+    @RequestMapping(value = {"/editbook"}, method = RequestMethod.POST)
+    public ModelAndView saveBook2(Model model, //
+                                   @ModelAttribute("bookform") BookForm bookForm) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("booklist");
+        String title = bookForm.getTitle();
+        String author = bookForm.getAuthor();
+        if (title != null && title.length() > 0 //
+                && author != null && author.length() > 0) {
+            if (title != null && title.length() > 0) {
+                for(Book book:books){
+                    if(title.equals(book.getTitle())){
+                        books.remove(book);
+                        break;
+                    }
+                }
+            }
+            Book newBook = new Book(title, author);
+            books.add(newBook);
+            model.addAttribute("books",books);
+        }
+        model.addAttribute("errorMessage", errorMessage);
         return modelAndView;
     }
 }
